@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="WaveData" load_steps=11 format=3]
+
+[ext_resource type="Script" uid="uid://cswe4diostrxg" path="res://scripts/stage/wave_data.gd" id="1_wave_data"]
+[ext_resource type="Script" uid="uid://c3frjon3woy81" path="res://scripts/stage/enemy_wave.gd" id="2_enemy_wave"]
+[ext_resource type="Script" uid="uid://nvh1jc8rp2w0" path="res://scripts/stage/enemy_spawn_entry.gd" id="3_spawn_entry"]
+[ext_resource type="PackedScene" path="res://scenes/units/enemies/enemy_1a.tscn" id="4_enemy_1a"]
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage1_wave1_1a"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 5
+delay_before_start = 10.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemyWave_stage1_1"]
+script = ExtResource("2_enemy_wave")
+wave_number = 1
+entries = Array[ExtResource("3_spawn_entry")]([SubResource("EnemySpawnEntry_stage1_wave1_1a")])
+wait_after_clear = 0.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage1_wave2_1a"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 5
+delay_before_start = 5.0
+interval = 3.0
+
+[sub_resource type="Resource" id="EnemyWave_stage1_2"]
+script = ExtResource("2_enemy_wave")
+wave_number = 2
+entries = Array[ExtResource("3_spawn_entry")]([SubResource("EnemySpawnEntry_stage1_wave2_1a")])
+wait_after_clear = 0.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage1_wave3_1a"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 5
+delay_before_start = 5.0
+interval = 1.0
+
+[sub_resource type="Resource" id="EnemyWave_stage1_3"]
+script = ExtResource("2_enemy_wave")
+wave_number = 3
+entries = Array[ExtResource("3_spawn_entry")]([SubResource("EnemySpawnEntry_stage1_wave3_1a")])
+wait_after_clear = 0.0
+
+[resource]
+script = ExtResource("1_wave_data")
+initial_deployment_cost = 5.0
+max_total_deployed_units = 6
+waves = Array[ExtResource("2_enemy_wave")]([SubResource("EnemyWave_stage1_1"), SubResource("EnemyWave_stage1_2"), SubResource("EnemyWave_stage1_3")])

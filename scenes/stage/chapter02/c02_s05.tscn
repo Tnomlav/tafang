@@ -1,0 +1,93 @@
+[gd_scene load_steps=14 format=4 uid="uid://c8afdlwld47ky"]
+
+[ext_resource type="Texture2D" uid="uid://c6wph81pm5pfs" path="res://assets/textures/tiles/瓦片.png" id="1_80nbo"]
+[ext_resource type="Texture2D" uid="uid://lhqs0e4xfisi" path="res://assets/textures/tiles/动态瓦片_红蓝绿标记.png" id="2_e2o6t"]
+[ext_resource type="Script" uid="uid://dpnc1iaakxgop" path="res://scripts/stage/game.gd" id="3_tj8jx"]
+[ext_resource type="Texture2D" uid="uid://bs6ubg6vld3kr" path="res://assets/textures/ui/tools/shovel.png" id="13_shovel_icon"]
+[ext_resource type="Texture2D" uid="uid://3bvou7htrhn2" path="res://assets/textures/ui/tools/shovel_target.png" id="14_shovel_target_icon"]
+[ext_resource type="PackedScene" uid="uid://d2i4shgsgnhud" path="res://scenes/ui/level_hud.tscn" id="18_level_hud"]
+
+[ext_resource type="Resource" path="res://resources/waves/c02_s05_wave_data.tres" id="19_c2_s5_wave_data"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_shovel_icon"]
+atlas = ExtResource("13_shovel_icon")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shovel_target_icon"]
+atlas = ExtResource("14_shovel_target_icon")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
+texture = ExtResource("1_80nbo")
+0:0/0 = 0
+0:0/0/custom_data_0 = true
+1:0/0 = 0
+2:0/0 = 0
+2:0/0/custom_data_0 = true
+0:1/0 = 0
+1:1/0 = 0
+1:1/0/custom_data_0 = true
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:2/0/custom_data_0 = true
+2:2/0 = 0
+2:2/0/custom_data_0 = true
+3:2/0 = 0
+3:2/0/custom_data_0 = true
+2:3/0 = 0
+3:3/0 = 0
+3:3/0/custom_data_0 = true
+3:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_feb5d"]
+physics_layer_0/collision_layer = 1
+custom_data_layer_0/name = "deployable"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "enemy_spawn"
+custom_data_layer_1/type = 1
+custom_data_layer_2/name = "enemy_target"
+custom_data_layer_2/type = 1
+custom_data_layer_3/name = "placement_type"
+custom_data_layer_3/type = 2
+sources/3 = SubResource("TileSetAtlasSource_eow3j")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fc0e3"]
+texture = ExtResource("2_e2o6t")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ryrav"]
+sources/0 = SubResource("TileSetAtlasSource_fc0e3")
+
+[node name="Game" type="Node2D"]
+process_mode = 3
+script = ExtResource("3_tj8jx")
+shovel_cursor_texture = SubResource("AtlasTexture_shovel_icon")
+shovel_target_cursor_texture = SubResource("AtlasTexture_shovel_target_icon")
+wave_data = ExtResource("19_c2_s5_wave_data")
+initial_deployment_cost = 5.0
+max_total_deployed_units = 6
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(160, 110)
+
+[node name="Ground_TML" type="TileMapLayer" parent="."]
+position = Vector2(97, 50)
+tile_map_data = PackedByteArray("AAD///3/AwACAAMAAAAAAP3/AwACAAMAAAABAP3/AwACAAMAAAACAP3/AwACAAMAAAACAP7/AwACAAAAAAACAP//AwACAAAAAAACAAAAAwACAAAAAAACAAEAAwACAAAAAAACAAIAAwACAAAAAAACAAMAAwACAAAAAAACAAQAAwACAAAAAAACAAUAAwACAAAAAAABAAUAAwAAAAAAAAAAAAUAAwACAAAAAAD//wUAAwAAAAAAAAD6/wQAAwACAAMAAAD6/wUAAwACAAMAAAD7/wUAAwABAAAAAAD8/wUAAwACAAAAAAD9/wUAAwAAAAAAAAD6/wAAAwACAAMAAAD6/wEAAwACAAMAAAD6/wIAAwACAAMAAAD6/wMAAwACAAMAAAD+//3/AwACAAMAAAD+//7/AwAAAAAAAAD+////AwACAAEAAAD+/wAAAwAAAAAAAAD+/wEAAwACAAEAAAD+/wIAAwAAAAAAAAD+/wMAAwACAAAAAAD+/wQAAwACAAAAAAD+/wUAAwACAAAAAAD7/wAAAwABAAAAAAD7/wEAAwABAAAAAAD7/wIAAwABAAAAAAD7/wMAAwABAAAAAAD7/wQAAwABAAAAAAD8/wAAAwACAAAAAAD8/wEAAwACAAAAAAD8/wIAAwACAAAAAAD8/wMAAwACAAAAAAD8/wQAAwACAAAAAAD9/wAAAwAAAAAAAAD9/wEAAwAAAAAAAAD9/wIAAwACAAEAAAD9/wMAAwAAAAAAAAD9/wQAAwAAAAAAAAD///7/AwAAAAAAAAD/////AwAAAAAAAAD//wAAAwACAAAAAAD//wEAAwAAAAAAAAD//wIAAwACAAEAAAD//wMAAwAAAAAAAAD//wQAAwAAAAAAAAAAAP7/AwAAAAAAAAAAAP//AwACAAEAAAAAAAAAAwAAAAAAAAAAAAEAAwACAAEAAAAAAAIAAwAAAAAAAAAAAAMAAwACAAAAAAAAAAQAAwACAAAAAAABAP7/AwACAAEAAAABAP//AwAAAAAAAAABAAAAAwAAAAAAAAABAAEAAwAAAAAAAAABAAIAAwACAAEAAAABAAMAAwAAAAAAAAABAAQAAwAAAAAAAAD6//3/AwACAAMAAAD6//7/AwACAAMAAAD6////AwACAAMAAAD7//3/AwACAAMAAAD7//7/AwABAAAAAAD7////AwABAAAAAAD8//3/AwACAAMAAAD8//7/AwACAAAAAAD8////AwACAAAAAAD9//3/AwACAAMAAAD9//7/AwACAAEAAAD9////AwAAAAAAAAD6/wYAAwACAAMAAAD6/wcAAwACAAMAAAD7/wYAAwABAAAAAAD7/wcAAwACAAMAAAD8/wYAAwACAAAAAAD8/wcAAwACAAMAAAD9/wYAAwAAAAAAAAD9/wcAAwACAAMAAAD+/wYAAwAAAAAAAAD+/wcAAwACAAMAAAD//wYAAwAAAAAAAAD//wcAAwACAAMAAAAAAAYAAwAAAAAAAAAAAAcAAwACAAMAAAABAAYAAwAAAAAAAAABAAcAAwACAAMAAAACAAYAAwACAAAAAAACAAcAAwACAAMAAAADAP3/AwACAAMAAAADAP7/AwABAAAAAAADAP//AwABAAAAAAADAAAAAwABAAAAAAADAAEAAwABAAAAAAADAAIAAwABAAAAAAADAAMAAwABAAAAAAADAAQAAwABAAAAAAADAAUAAwABAAAAAAADAAYAAwACAAAAAAADAAcAAwACAAMAAAAEAP3/AwACAAMAAAAEAP7/AwACAAMAAAAEAP//AwACAAMAAAAEAAAAAwACAAMAAAAEAAEAAwACAAMAAAAEAAIAAwACAAMAAAAEAAMAAwACAAMAAAAEAAQAAwACAAMAAAAEAAUAAwACAAMAAAAEAAYAAwACAAMAAAAEAAcAAwACAAMAAAA=")
+tile_set = SubResource("TileSet_feb5d")
+
+[node name="Overlay_TML" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAEAAgAAAABAAAAAAAEAAkAAAABAAEAAAAGAAgAAAABAAAAAAAGAAkAAAABAAEAAAADAAAAAAAAAAAAAAADAAEAAAAAAAEAAAAEAAAAAAAAAAAAAAAEAAEAAAAAAAEAAAAGAAAAAAAAAAAAAAAGAAEAAAAAAAEAAAAHAAAAAAAAAAAAAAAHAAEAAAAAAAEAAAA=")
+tile_set = SubResource("TileSet_ryrav")
+
+[node name="Units" type="Node2D" parent="."]
+process_mode = 1
+
+[node name="DeployPreview" type="Node2D" parent="."]
+process_mode = 1
+
+[node name="UI" parent="." instance=ExtResource("18_level_hud")]

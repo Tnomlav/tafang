@@ -1,0 +1,89 @@
+[gd_scene load_steps=13 format=4 uid="uid://r7ggpyaeodma"]
+
+[ext_resource type="Texture2D" uid="uid://c6wph81pm5pfs" path="res://assets/textures/tiles/瓦片.png" id="1_80nbo"]
+[ext_resource type="Texture2D" uid="uid://lhqs0e4xfisi" path="res://assets/textures/tiles/动态瓦片_红蓝绿标记.png" id="2_e2o6t"]
+[ext_resource type="Script" uid="uid://dpnc1iaakxgop" path="res://scripts/stage/game.gd" id="3_tj8jx"]
+[ext_resource type="Texture2D" uid="uid://bs6ubg6vld3kr" path="res://assets/textures/ui/tools/shovel.png" id="13_shovel_icon"]
+[ext_resource type="Texture2D" uid="uid://3bvou7htrhn2" path="res://assets/textures/ui/tools/shovel_target.png" id="14_shovel_target_icon"]
+[ext_resource type="PackedScene" uid="uid://d2i4shgsgnhud" path="res://scenes/ui/level_hud.tscn" id="18_level_hud"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shovel_icon"]
+atlas = ExtResource("13_shovel_icon")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shovel_target_icon"]
+atlas = ExtResource("14_shovel_target_icon")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
+texture = ExtResource("1_80nbo")
+0:0/0 = 0
+0:0/0/custom_data_0 = true
+1:0/0 = 0
+2:0/0 = 0
+2:0/0/custom_data_0 = true
+0:1/0 = 0
+1:1/0 = 0
+1:1/0/custom_data_0 = true
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+1:2/0/custom_data_0 = true
+2:2/0 = 0
+2:2/0/custom_data_0 = true
+3:2/0 = 0
+3:2/0/custom_data_0 = true
+2:3/0 = 0
+3:3/0 = 0
+3:3/0/custom_data_0 = true
+3:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_feb5d"]
+physics_layer_0/collision_layer = 1
+custom_data_layer_0/name = "deployable"
+custom_data_layer_0/type = 1
+custom_data_layer_1/name = "enemy_spawn"
+custom_data_layer_1/type = 1
+custom_data_layer_2/name = "enemy_target"
+custom_data_layer_2/type = 1
+custom_data_layer_3/name = "placement_type"
+custom_data_layer_3/type = 2
+sources/3 = SubResource("TileSetAtlasSource_eow3j")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fc0e3"]
+texture = ExtResource("2_e2o6t")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ryrav"]
+sources/0 = SubResource("TileSetAtlasSource_fc0e3")
+
+[node name="Game" type="Node2D"]
+process_mode = 3
+script = ExtResource("3_tj8jx")
+shovel_cursor_texture = SubResource("AtlasTexture_shovel_icon")
+shovel_target_cursor_texture = SubResource("AtlasTexture_shovel_target_icon")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(160, 110)
+
+[node name="Ground_TML" type="TileMapLayer" parent="."]
+position = Vector2(97, 50)
+tile_map_data = PackedByteArray("AAD6//3/AwACAAMAAAD7//3/AwACAAMAAAD8//3/AwACAAMAAAD9//3/AwACAAMAAAD///3/AwACAAMAAAAAAP3/AwACAAMAAAABAP3/AwACAAMAAAABAAUAAwACAAMAAAAAAAUAAwACAAMAAAD//wUAAwACAAMAAAD6/wQAAwACAAMAAAD6/wUAAwACAAMAAAD7/wUAAwACAAMAAAD8/wUAAwACAAMAAAD9/wUAAwACAAMAAAD6//7/AwACAAMAAAD6////AwACAAMAAAD6/wAAAwACAAMAAAD6/wEAAwACAAMAAAD6/wIAAwACAAMAAAD6/wMAAwACAAMAAAD+//3/AwACAAMAAAD+//7/AwABAAEAAAD+////AwABAAAAAAD+/wAAAwAAAAAAAAD+/wEAAwACAAAAAAD+/wIAAwAAAAAAAAD+/wMAAwACAAAAAAD+/wQAAwAAAAAAAAD+/wUAAwACAAMAAAD7//7/AwAAAAAAAAD7////AwABAAAAAAD7/wAAAwACAAAAAAD7/wEAAwACAAAAAAD7/wIAAwAAAAAAAAD7/wMAAwACAAAAAAD7/wQAAwACAAAAAAD8//7/AwACAAEAAAD8////AwABAAAAAAD8/wAAAwACAAEAAAD8/wEAAwAAAAAAAAD8/wIAAwAAAAAAAAD8/wMAAwAAAAAAAAD8/wQAAwACAAEAAAD9//7/AwABAAEAAAD9////AwABAAAAAAD9/wAAAwAAAAAAAAD9/wEAAwACAAAAAAD9/wIAAwAAAAAAAAD9/wMAAwACAAAAAAD9/wQAAwAAAAAAAAD///7/AwABAAEAAAD/////AwABAAAAAAD//wAAAwABAAEAAAD//wEAAwABAAEAAAD//wIAAwABAAEAAAD//wMAAwABAAEAAAD//wQAAwABAAEAAAAAAP7/AwABAAEAAAAAAP//AwABAAAAAAAAAAAAAwABAAEAAAAAAAEAAwABAAEAAAAAAAIAAwABAAEAAAAAAAMAAwABAAEAAAAAAAQAAwABAAEAAAABAP7/AwABAAEAAAABAP//AwABAAEAAAABAAAAAwABAAEAAAABAAEAAwABAAEAAAABAAIAAwACAAEAAAABAAMAAwABAAEAAAABAAQAAwABAAEAAAACAAUAAwACAAMAAAACAAQAAwACAAMAAAACAAMAAwACAAMAAAACAAIAAwACAAMAAAACAAEAAwACAAMAAAACAAAAAwACAAMAAAACAP//AwACAAMAAAACAP7/AwACAAMAAAACAP3/AwACAAMAAAA=")
+tile_set = SubResource("TileSet_feb5d")
+
+[node name="Overlay_TML" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAABAAAAAAAAAAAAAAABAAEAAAAAAAEAAAAHAAMAAAAAAAAAAAAHAAQAAAAAAAEAAAAHAAUAAAAAAAAAAAAHAAYAAAAAAAEAAAABAAQAAAABAAAAAAABAAUAAAABAAEAAAA=")
+tile_set = SubResource("TileSet_ryrav")
+
+[node name="Units" type="Node2D" parent="."]
+process_mode = 1
+
+[node name="DeployPreview" type="Node2D" parent="."]
+process_mode = 1
+
+[node name="UI" parent="." instance=ExtResource("18_level_hud")]

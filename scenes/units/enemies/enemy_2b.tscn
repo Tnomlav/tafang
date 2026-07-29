@@ -1,0 +1,111 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/units/enemy.gd" id="1_enemy_script"]
+[ext_resource type="Texture2D" path="res://assets/textures/enemies/source_stone_insect_2.png" id="2_enemy_texture"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/unit_health_bar_back.png" id="3_health_back"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/unit_health_bar_red_fill.png" id="4_health_red_fill"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_0"]
+atlas = ExtResource("2_enemy_texture")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_1"]
+atlas = ExtResource("2_enemy_texture")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_active_2"]
+atlas = ExtResource("2_enemy_texture")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_death_0"]
+atlas = ExtResource("2_enemy_texture")
+region = Rect2(0, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_death_1"]
+atlas = ExtResource("2_enemy_texture")
+region = Rect2(32, 160, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_death_2"]
+atlas = ExtResource("2_enemy_texture")
+region = Rect2(64, 160, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_active_2")
+}],
+"loop": true,
+"name": &"active",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_death_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_death_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_death_2")
+}],
+"loop": false,
+"name": &"death",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_health_bar_back"]
+atlas = ExtResource("3_health_back")
+region = Rect2(0, 0, 32, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_health_bar_red_fill"]
+atlas = ExtResource("4_health_red_fill")
+region = Rect2(0, 0, 30, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
+size = Vector2(16, 16)
+
+[node name="2B" type="CharacterBody2D"]
+script = ExtResource("1_enemy_script")
+half_health_attack_power_bonus = 0
+half_health_move_speed_multiplier = 1.0
+half_health_attack_speed_multiplier = 1.0
+incoming_damage_reduction = 0
+taunt_level = 0
+splash_damage_radius_tiles = 1.0
+attack_stun_duration = 0.0
+attack_target_count = 1
+enemy_id = "2B"
+max_health = 70
+attack_power = 1
+attack_speed = 0.5
+attack_distance_tiles = 5.0
+skill_description = "攻击为半径1的溅射伤害"
+move_speed_tiles_per_second = 0.5
+can_be_blocked = 1
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_enemy")
+animation = &"active"
+autoplay = "active"
+
+[node name="HealthBar" type="Node2D" parent="."]
+position = Vector2(-16, 11)
+
+[node name="Back" type="Sprite2D" parent="HealthBar"]
+texture = SubResource("AtlasTexture_health_bar_back")
+centered = false
+
+[node name="Fill" type="Sprite2D" parent="HealthBar"]
+position = Vector2(1, 1)
+texture = SubResource("AtlasTexture_health_bar_red_fill")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_enemy")

@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgoweerypmakt"]
+
+[ext_resource type="PackedScene" uid="uid://4tqrbjyw8iu3" path="res://scenes/units/characters/w.tscn" id="1_fyqef"]
+
+[node name="UI" type="CanvasLayer"]
+
+[node name="HandBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="CardList" type="HBoxContainer" parent="HandBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HandCard" type="Button" parent="HandBar"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="Icon" type="TextureButton" parent="HandBar/HandCard"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="NameLabel" type="Label" parent="HandBar/HandCard"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="CooldownMask" type="ColorRect" parent="HandBar/HandCard"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="W" parent="." instance=ExtResource("1_fyqef")]

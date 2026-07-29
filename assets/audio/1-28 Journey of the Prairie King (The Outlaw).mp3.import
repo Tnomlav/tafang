@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cucpvs5o5wx0x"
+path="res://.godot/imported/1-28 Journey of the Prairie King (The Outlaw).mp3-6d7850a3fd04f7fd7c2ff58a45da6c0f.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/1-28 Journey of the Prairie King (The Outlaw).mp3"
+dest_files=["res://.godot/imported/1-28 Journey of the Prairie King (The Outlaw).mp3-6d7850a3fd04f7fd7c2ff58a45da6c0f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

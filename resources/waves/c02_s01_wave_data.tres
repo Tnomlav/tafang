@@ -1,0 +1,152 @@
+[gd_resource type="Resource" script_class="WaveData" load_steps=23 format=3]
+
+[ext_resource type="Script" uid="uid://cswe4diostrxg" path="res://scripts/stage/wave_data.gd" id="1_wave_data"]
+[ext_resource type="Script" uid="uid://c3frjon3woy81" path="res://scripts/stage/enemy_wave.gd" id="2_enemy_wave"]
+[ext_resource type="Script" uid="uid://nvh1jc8rp2w0" path="res://scripts/stage/enemy_spawn_entry.gd" id="3_spawn_entry"]
+[ext_resource type="PackedScene" path="res://scenes/units/enemies/enemy_1a.tscn" id="4_enemy_1a"]
+[ext_resource type="PackedScene" path="res://scenes/units/enemies/enemy_1d.tscn" id="5_enemy_1d"]
+[ext_resource type="PackedScene" path="res://scenes/units/enemies/enemy_2a.tscn" id="6_enemy_2a"]
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1a_1"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 5
+waypoint_orders = Array[int]([1, 4, 7, 10, 13, 16])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 10.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1a_2"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 5
+waypoint_orders = Array[int]([2, 5, 8, 11, 14, 17])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 12.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1a_3"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 5
+waypoint_orders = Array[int]([3, 6, 9, 12, 15, 18])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 10.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_2a_4"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("6_enemy_2a")
+count = 5
+waypoint_orders = Array[int]([1, 4, 7, 10, 13, 16])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 40.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_2a_5"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("6_enemy_2a")
+count = 5
+waypoint_orders = Array[int]([2, 5, 8, 11, 14, 17])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 42.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_2a_6"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("6_enemy_2a")
+count = 5
+waypoint_orders = Array[int]([3, 6, 9, 12, 15, 18])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 40.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1a_7"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 3
+waypoint_orders = Array[int]([1, 4, 7, 10, 13, 16])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 70.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1a_8"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 3
+waypoint_orders = Array[int]([2, 5, 8, 11, 14, 17])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 72.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1a_9"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("4_enemy_1a")
+count = 3
+waypoint_orders = Array[int]([3, 6, 9, 12, 15, 18])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 70.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_2a_10"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("6_enemy_2a")
+count = 3
+waypoint_orders = Array[int]([1, 4, 7, 10, 13, 16])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 90.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_2a_11"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("6_enemy_2a")
+count = 3
+waypoint_orders = Array[int]([2, 5, 8, 11, 14, 17])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 92.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_2a_12"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("6_enemy_2a")
+count = 3
+waypoint_orders = Array[int]([3, 6, 9, 12, 15, 18])
+waypoint_wait_durations = Array[float]([5.0, 5.0, 5.0, 5.0, 5.0, 5.0])
+delay_before_start = 90.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1d_13"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("5_enemy_1d")
+count = 3
+waypoint_orders = Array[int]([1, 4, 7, 10, 13, 16])
+delay_before_start = 110.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1d_14"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("5_enemy_1d")
+count = 3
+waypoint_orders = Array[int]([2, 5, 8, 11, 14, 17])
+delay_before_start = 114.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemySpawnEntry_stage13_wave1_1d_15"]
+script = ExtResource("3_spawn_entry")
+enemy_scene = ExtResource("5_enemy_1d")
+count = 3
+waypoint_orders = Array[int]([3, 6, 9, 12, 15, 18])
+delay_before_start = 110.0
+interval = 5.0
+
+[sub_resource type="Resource" id="EnemyWave_stage13_1"]
+script = ExtResource("2_enemy_wave")
+wave_number = 1
+entries = Array[ExtResource("3_spawn_entry")]([SubResource("EnemySpawnEntry_stage13_wave1_1a_1"), SubResource("EnemySpawnEntry_stage13_wave1_1a_2"), SubResource("EnemySpawnEntry_stage13_wave1_1a_3"), SubResource("EnemySpawnEntry_stage13_wave1_2a_4"), SubResource("EnemySpawnEntry_stage13_wave1_2a_5"), SubResource("EnemySpawnEntry_stage13_wave1_2a_6"), SubResource("EnemySpawnEntry_stage13_wave1_1a_7"), SubResource("EnemySpawnEntry_stage13_wave1_1a_8"), SubResource("EnemySpawnEntry_stage13_wave1_1a_9"), SubResource("EnemySpawnEntry_stage13_wave1_2a_10"), SubResource("EnemySpawnEntry_stage13_wave1_2a_11"), SubResource("EnemySpawnEntry_stage13_wave1_2a_12"), SubResource("EnemySpawnEntry_stage13_wave1_1d_13"), SubResource("EnemySpawnEntry_stage13_wave1_1d_14"), SubResource("EnemySpawnEntry_stage13_wave1_1d_15")])
+wait_after_clear = 0.0
+
+[resource]
+script = ExtResource("1_wave_data")
+initial_deployment_cost = 5.0
+max_total_deployed_units = 6
+waves = Array[ExtResource("2_enemy_wave")]([SubResource("EnemyWave_stage13_1")])

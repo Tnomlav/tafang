@@ -1,0 +1,489 @@
+[gd_scene load_steps=36 format=4 uid="uid://d2i4shgsgnhud"]
+
+[ext_resource type="PackedScene" uid="uid://bmlhpf3htmu63" path="res://scenes/ui/hand_card.tscn" id="1_handcard"]
+[ext_resource type="PackedScene" uid="uid://4tqrbjyw8iu3" path="res://scenes/units/characters/w.tscn" id="2_w_scene"]
+[ext_resource type="PackedScene" path="res://scenes/units/characters/x.tscn" id="3_x_scene"]
+[ext_resource type="PackedScene" path="res://scenes/units/characters/y.tscn" id="4_y_scene"]
+[ext_resource type="PackedScene" path="res://scenes/units/characters/z.tscn" id="5_z_scene"]
+[ext_resource type="PackedScene" path="res://scenes/units/characters/u.tscn" id="14_u_scene"]
+[ext_resource type="PackedScene" path="res://scenes/units/characters/v.tscn" id="15_v_scene"]
+[ext_resource type="Texture2D" uid="uid://btu62abpw0oaq" path="res://assets/textures/characters/w.png" id="6_w_texture"]
+[ext_resource type="Texture2D" uid="uid://d380cu5yn44wr" path="res://assets/textures/characters/x.png" id="7_x_texture"]
+[ext_resource type="Texture2D" uid="uid://bid2i1b37xh6b" path="res://assets/textures/characters/y.png" id="8_y_texture"]
+[ext_resource type="Texture2D" uid="uid://b6uueh3oa2i68" path="res://assets/textures/characters/z.png" id="9_z_texture"]
+[ext_resource type="Texture2D" path="res://assets/textures/characters/u.png" id="16_u_texture"]
+[ext_resource type="Texture2D" path="res://assets/textures/characters/v.png" id="17_v_texture"]
+[ext_resource type="Texture2D" uid="uid://bs6ubg6vld3kr" path="res://assets/textures/ui/tools/shovel.png" id="10_shovel_icon"]
+[ext_resource type="Texture2D" uid="uid://bopt5lu1e85eh" path="res://assets/textures/ui/tools/restart.png" id="11_restart_icon"]
+[ext_resource type="Texture2D" uid="uid://dffqm44c2buog" path="res://assets/textures/ui/tools/pause.png" id="12_pause_icon"]
+[ext_resource type="Texture2D" uid="uid://d3rfn3pghu3tk" path="res://assets/textures/ui/tools/exit.png" id="13_exit_icon"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/道具ui.png" id="18_item_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hand_bar"]
+bg_color = Color(0.06, 0.067, 0.08, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.58, 0.34, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info_panel"]
+bg_color = Color(0.06, 0.067, 0.08, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.58, 0.34, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost_fraction_bar_bg"]
+bg_color = Color(0.055, 0.062, 0.074, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.28, 0.3, 0.32, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost_fraction_bar_fill"]
+bg_color = Color(0.95, 0.76, 0.32, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w_card_icon"]
+atlas = ExtResource("6_w_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x_card_icon"]
+atlas = ExtResource("7_x_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y_card_icon"]
+atlas = ExtResource("8_y_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_z_card_icon"]
+atlas = ExtResource("9_z_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u_card_icon"]
+atlas = ExtResource("16_u_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v_card_icon"]
+atlas = ExtResource("17_v_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_timer_icon"]
+atlas = ExtResource("18_item_ui")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cost_icon"]
+atlas = ExtResource("18_item_ui")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tool_button"]
+bg_color = Color(0.11, 0.12, 0.14, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.75, 0.66, 0.38, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tool_button_pressed"]
+bg_color = Color(0.18, 0.17, 0.14, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.77, 0.35, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="UI" type="CanvasLayer"]
+process_mode = 3
+
+[node name="HandBar" type="PanelContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -524.0
+offset_top = -124.0
+offset_right = -18.0
+offset_bottom = -18.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hand_bar")
+
+[node name="HandMargin" type="MarginContainer" parent="HandBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 9
+
+[node name="CardList" type="HBoxContainer" parent="HandBar/HandMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="WCard" parent="HandBar/HandMargin/CardList" instance=ExtResource("1_handcard")]
+layout_mode = 2
+unit_id = "w"
+unit_scene = ExtResource("2_w_scene")
+preview_texture = SubResource("AtlasTexture_w_card_icon")
+
+[node name="XCard" parent="HandBar/HandMargin/CardList" instance=ExtResource("1_handcard")]
+layout_mode = 2
+unit_id = "x"
+unit_scene = ExtResource("3_x_scene")
+preview_texture = SubResource("AtlasTexture_x_card_icon")
+
+[node name="YCard" parent="HandBar/HandMargin/CardList" instance=ExtResource("1_handcard")]
+layout_mode = 2
+unit_id = "y"
+unit_scene = ExtResource("4_y_scene")
+preview_texture = SubResource("AtlasTexture_y_card_icon")
+
+[node name="ZCard" parent="HandBar/HandMargin/CardList" instance=ExtResource("1_handcard")]
+layout_mode = 2
+unit_id = "z"
+unit_scene = ExtResource("5_z_scene")
+preview_texture = SubResource("AtlasTexture_z_card_icon")
+
+[node name="UCard" parent="HandBar/HandMargin/CardList" instance=ExtResource("1_handcard")]
+layout_mode = 2
+unit_id = "u"
+unit_scene = ExtResource("14_u_scene")
+preview_texture = SubResource("AtlasTexture_u_card_icon")
+
+[node name="VCard" parent="HandBar/HandMargin/CardList" instance=ExtResource("1_handcard")]
+layout_mode = 2
+unit_id = "v"
+unit_scene = ExtResource("15_v_scene")
+preview_texture = SubResource("AtlasTexture_v_card_icon")
+
+[node name="ToolBar" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -246.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = 106.0
+grow_horizontal = 0
+
+[node name="ShovelButton" type="Button" parent="ToolBar"]
+custom_minimum_size = Vector2(72, 88)
+layout_mode = 1
+offset_right = 72.0
+offset_bottom = 88.0
+theme_override_constants/icon_max_width = 42
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_tool_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+toggle_mode = true
+text = "铲子"
+icon = ExtResource("10_shovel_icon")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="RestartButton" type="Button" parent="ToolBar"]
+custom_minimum_size = Vector2(72, 88)
+layout_mode = 1
+offset_left = 78.0
+offset_right = 150.0
+offset_bottom = 88.0
+theme_override_constants/icon_max_width = 42
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_tool_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+text = "重开"
+icon = ExtResource("11_restart_icon")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="PauseButton" type="Button" parent="ToolBar"]
+custom_minimum_size = Vector2(72, 88)
+layout_mode = 1
+offset_left = 156.0
+offset_right = 228.0
+offset_bottom = 88.0
+focus_mode = 0
+theme_override_constants/icon_max_width = 42
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_tool_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+toggle_mode = true
+text = "暂停"
+icon = ExtResource("12_pause_icon")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="ExitButton" type="Button" parent="."]
+custom_minimum_size = Vector2(72, 88)
+offset_left = 18.0
+offset_top = 18.0
+offset_right = 90.0
+offset_bottom = 106.0
+theme_override_constants/icon_max_width = 42
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_tool_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tool_button_pressed")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_tool_button_pressed")
+text = "退出"
+icon = ExtResource("13_exit_icon")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="ExitConfirmDialog" type="ConfirmationDialog" parent="."]
+title = "确认退出"
+initial_position = 2
+ok_button_text = "确认"
+dialog_text = "确定退出本关并返回选关界面？"
+cancel_button_text = "取消"
+
+[node name="RestartConfirmDialog" type="ConfirmationDialog" parent="."]
+title = "确认重开"
+initial_position = 2
+ok_button_text = "确认"
+dialog_text = "确定重新开始本关吗？"
+cancel_button_text = "取消"
+
+[node name="StageClearDialog" type="ConfirmationDialog" parent="."]
+title = ""
+initial_position = 2
+ok_button_text = "下一关"
+dialog_text = "关卡胜利"
+cancel_button_text = "返回"
+
+[node name="RewardPortraitContainer" type="SubViewportContainer" parent="StageClearDialog"]
+visible = false
+offset_left = 96.0
+offset_top = 64.0
+offset_right = 264.0
+offset_bottom = 232.0
+mouse_filter = 2
+stretch = true
+
+[node name="RewardPortraitViewport" type="SubViewport" parent="StageClearDialog/RewardPortraitContainer"]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(168, 168)
+render_target_update_mode = 4
+
+[node name="RewardPortraitRoot" type="Node2D" parent="StageClearDialog/RewardPortraitContainer/RewardPortraitViewport"]
+
+[node name="InfoPanel" type="PanelContainer" parent="."]
+visible = false
+offset_left = 18.0
+offset_top = 124.0
+offset_right = 298.0
+offset_bottom = 488.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_info_panel")
+
+[node name="InfoMargin" type="MarginContainer" parent="InfoPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="InfoRows" type="VBoxContainer" parent="InfoPanel/InfoMargin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="InfoTitle" type="Label" parent="InfoPanel/InfoMargin/InfoRows"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.93, 0.82, 1)
+theme_override_font_sizes/font_size = 22
+text = "W"
+vertical_alignment = 1
+clip_text = true
+
+[node name="InfoBody" type="Label" parent="InfoPanel/InfoMargin/InfoRows"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.74, 1)
+theme_override_font_sizes/font_size = 15
+text = ""
+autowrap_mode = 3
+
+[node name="TimerPanel" type="HBoxContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -210.0
+offset_top = 18.0
+offset_right = 210.0
+offset_bottom = 78.0
+grow_horizontal = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="WaveLabel" type="Label" parent="TimerPanel"]
+custom_minimum_size = Vector2(116, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "波次 0/0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="TimerIcon" type="TextureRect" parent="TimerPanel"]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+texture = SubResource("AtlasTexture_timer_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TimerLabel" type="Label" parent="TimerPanel"]
+custom_minimum_size = Vector2(88, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.93, 0.82, 1)
+theme_override_font_sizes/font_size = 30
+text = "00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KillLabel" type="Label" parent="TimerPanel"]
+custom_minimum_size = Vector2(116, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.78, 1)
+theme_override_font_sizes/font_size = 22
+text = "击杀 0/0"
+horizontal_alignment = 0
+vertical_alignment = 1
+
+[node name="CostPanel" type="HBoxContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -192.0
+offset_right = -18.0
+offset_bottom = -128.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="CostIcon" type="TextureRect" parent="CostPanel"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+texture = SubResource("AtlasTexture_cost_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CostLabel" type="Label" parent="CostPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.93, 0.82, 1)
+theme_override_font_sizes/font_size = 28
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CostFractionBar" type="ProgressBar" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -214.0
+offset_right = -18.0
+offset_bottom = -204.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_cost_fraction_bar_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_cost_fraction_bar_fill")
+max_value = 100.0
+step = 0.01
+value = 0.0
+show_percentage = false
+
+[node name="LivesLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -126.0
+offset_top = 112.0
+offset_right = -18.0
+offset_bottom = 144.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.95, 0.16, 0.2, 1)
+theme_override_font_sizes/font_size = 24
+text = "♥♥♥"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="FeedbackLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -260.0
+offset_top = 86.0
+offset_right = 260.0
+offset_bottom = 140.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.96, 0.93, 0.76, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.78)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 28
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FailureLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -48.0
+offset_right = 120.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.16, 0.2, 1)
+theme_override_font_sizes/font_size = 52
+text = "关卡失败"
+horizontal_alignment = 1
+vertical_alignment = 1

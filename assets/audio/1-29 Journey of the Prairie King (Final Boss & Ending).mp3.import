@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://gi3l204jxsjv"
+path="res://.godot/imported/1-29 Journey of the Prairie King (Final Boss & Ending).mp3-cf45cc67ced17e5cd46751c917b1b0f8.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/1-29 Journey of the Prairie King (Final Boss & Ending).mp3"
+dest_files=["res://.godot/imported/1-29 Journey of the Prairie King (Final Boss & Ending).mp3-cf45cc67ced17e5cd46751c917b1b0f8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

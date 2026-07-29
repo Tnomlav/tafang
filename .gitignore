@@ -1,0 +1,8 @@
+# Godot 4+ specific ignores
+.godot/
+/.godot_tmp_user/
+/node_modules/
+/.sheet_node_modules/
+/tmp/
+/guanqia.xlsx.inspect.ndjson
+/android/
