@@ -4,6 +4,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+if ($PSVersionTable.PSEdition -eq "Core") {
+    Write-Warning "PowerShell 7 formats ConvertTo-Json differently from Windows PowerShell 5.1. Run tools\sync_excel.ps1 through powershell.exe so stage_catalog.json keeps the formatting that is committed to the repository."
+}
+
 if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
     $ProjectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
 } else {
@@ -53,6 +57,6 @@ foreach ($entry in @($catalog.stages)) {
     }
 }
 
-$json = $catalog | ConvertTo-Json -Depth 20
-[System.IO.File]::WriteAllText($catalogPath, $json + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+$json = ($catalog | ConvertTo-Json -Depth 20) -replace "`r`n", "`n"
+[System.IO.File]::WriteAllText($catalogPath, $json + "`n", (New-Object System.Text.UTF8Encoding($false)))
 Write-Host "Synced stage catalog from scene and wave resources: $catalogPath"

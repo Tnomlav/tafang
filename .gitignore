@@ -3,6 +3,8 @@
 /.godot_tmp_user/
 /node_modules/
 /.sheet_node_modules/
-/tmp/
+/tmp/*
+!/tmp/verify_*.gd
 /guanqia.xlsx.inspect.ndjson
 /android/
+/build/

@@ -33,6 +33,7 @@ $FullWidthColonText = [string]([char]0xFF1A)
 $SlowText = [string]([char]0x51CF) + [string]([char]0x901F)
 $StunText = [string]([char]0x7729) + [string]([char]0x6655)
 $HealBackText = [string]([char]0x56DE) + [string]([char]0x8840)
+$HealSelfText = [string]([char]0x56DE) + [string]([char]0x590D) + [string]([char]0x81EA) + [string]([char]0x8EAB)
 $CriticalText = [string]([char]0x66B4) + [string]([char]0x51FB)
 $DamageText = [string]([char]0x4F24) + [string]([char]0x5BB3)
 $ReduceText = [string]([char]0x964D) + [string]([char]0x4F4E)
@@ -533,7 +534,7 @@ function Parse-SkillEffect {
         }
     }
 
-    $healMatch = [regex]::Match($text, "回复自身\s*([0-9]+(?:\.[0-9]+)?)")
+    $healMatch = [regex]::Match($text, [regex]::Escape($HealSelfText) + "\s*([0-9]+(?:\.[0-9]+)?)")
     if ($healMatch.Success) {
         $result.attack_heal_amount = [double]::Parse($healMatch.Groups[1].Value, [System.Globalization.CultureInfo]::InvariantCulture)
     }

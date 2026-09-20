@@ -1,6 +1,6 @@
 param(
     [string]$ProjectRoot = "",
-    [string]$GodotExe = "C:\Users\admin\Downloads\Godot_v4.5.1-stable_win64.exe\Godot_v4.5.1-stable_win64_console.exe"
+    [string]$GodotExe = "C:\Godot\4.5.1\Godot_v4.5.1-stable_win64_console.exe"
 )
 
 $ErrorActionPreference = "Stop"
