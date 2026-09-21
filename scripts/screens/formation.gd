@@ -3,7 +3,9 @@ extends Control
 const LEVEL_SELECT_SCENE := "res://scenes/screens/level_select.tscn"
 const ARCHIVE_STATE := preload("res://scripts/systems/archive_state.gd")
 const STAGE_CATALOG := preload("res://scripts/systems/stage_catalog.gd")
+const STARTER_GIFT_DIALOG_SCRIPT := preload("res://scripts/ui/starter_gift_dialog.gd")
 const MAX_SQUAD_SIZE := 10
+const STARTER_GIFT_STAGE_NUMBER := 1
 const UNSELECTED_FONT_COLOR := Color(0.62, 0.64, 0.66, 1.0)
 const SELECTED_FONT_COLOR := Color(1.0, 0.88, 0.45, 1.0)
 const CARD_SIZE := Vector2(126, 168)
@@ -46,6 +48,7 @@ var character_entries: Array[Dictionary] = []
 var is_changing_scene := false
 var unselected_card_style: StyleBoxFlat
 var selected_card_style: StyleBoxFlat
+var gift_dialog: ConfirmationDialog = null
 
 
 func _ready() -> void:
@@ -58,6 +61,7 @@ func _ready() -> void:
 	_update_selection_ui()
 	_connect_once(start_button.pressed, _on_start_pressed)
 	_connect_once(back_button.pressed, _on_back_pressed)
+	call_deferred("_show_starter_gift_for_opening_stage")
 	_connect_once(clear_button.pressed, _on_clear_pressed)
 	_connect_once(recommend_button.pressed, _on_recommend_pressed)
 
@@ -99,6 +103,39 @@ func _localize_static_text() -> void:
 func _connect_once(signal_ref: Signal, callable: Callable) -> void:
 	if not signal_ref.is_connected(callable):
 		signal_ref.connect(callable)
+
+
+## Grants the starter character the first time the player opens the formation
+## screen of the opening stage, so the gift lands right before the first battle.
+func _show_starter_gift_for_opening_stage() -> void:
+	if _get_target_stage_number() != STARTER_GIFT_STAGE_NUMBER:
+		return
+	if ARCHIVE_STATE.has_claimed_starter_character():
+		return
+
+	var granted_character_id := ARCHIVE_STATE.claim_starter_character()
+	if granted_character_id.strip_edges().is_empty():
+		return
+
+	_build_character_buttons()
+	selected_ids = _filter_selectable_ids(selected_ids)
+	_update_selection_ui()
+	_ensure_gift_dialog()
+	gift_dialog.show_gift(granted_character_id)
+
+
+func _get_target_stage_number() -> int:
+	var target_stage := STAGE_CATALOG.get_stage_by_scene_path(ARCHIVE_STATE.get_target_stage_path())
+	return int(target_stage.get("global_stage_number", 0))
+
+
+func _ensure_gift_dialog() -> void:
+	if gift_dialog != null:
+		return
+
+	gift_dialog = STARTER_GIFT_DIALOG_SCRIPT.new()
+	gift_dialog.name = "StarterGiftDialog"
+	add_child(gift_dialog)
 
 
 func _get_character_entries() -> Array[Dictionary]:

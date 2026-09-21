@@ -11,6 +11,9 @@ const TITLE := "unlock flow"
 const SAVE_PATH := "user://archive_unlocks.cfg"
 const ARCHIVE_STATE_PATH := "res://scripts/systems/archive_state.gd"
 const MAIN_MENU_SCENE_PATH := "res://scenes/screens/main_menu.tscn"
+const FORMATION_SCENE_PATH := "res://scenes/screens/formation.tscn"
+const OPENING_STAGE_SCENE_PATH := "res://scenes/stage/chapter01/c01_s01.tscn"
+const SECOND_STAGE_SCENE_PATH := "res://scenes/stage/chapter01/c01_s02.tscn"
 const SKILL_UNLOCK_STAGE := 18
 const CHAPTER2_BOSS_STAGE := 18
 const VISIBLE_STAGE_LOOKAHEAD := 6
@@ -34,7 +37,7 @@ func _run() -> void:
 	_check_skill_unlocks()
 	_check_enemy_unlocks()
 	_check_level_select_visibility()
-	await _check_main_menu_gift()
+	await _check_starter_gift_ui()
 	_restore_save()
 	quit(verify.report(TITLE))
 
@@ -88,35 +91,66 @@ func _check_starter_gift() -> void:
 	verify.check_eq(ArchiveState.claim_starter_character(), starter_character_id, "resetting progress must prepare the starter gift again")
 
 
-func _check_main_menu_gift() -> void:
+func _check_starter_gift_ui() -> void:
 	if not verify.check_resource_path(MAIN_MENU_SCENE_PATH, "main menu scene"):
 		return
+	if not verify.check_resource_path(FORMATION_SCENE_PATH, "formation scene"):
+		return
+	if not verify.check_resource_path(OPENING_STAGE_SCENE_PATH, "opening stage scene"):
+		return
 
+	# The gift belongs to the opening stage's formation screen, not to the menu.
 	ArchiveState.reset_progress()
 	var menu: Node = load(MAIN_MENU_SCENE_PATH).instantiate()
 	root.add_child(menu)
 	await process_frame
 	await process_frame
-
-	var gift_dialog := menu.get_node_or_null("StarterGiftDialog") as ConfirmationDialog
-	if verify.check(gift_dialog != null, "the main menu must create the starter gift dialog"):
-		verify.check(gift_dialog.visible, "the starter gift dialog must open on the first entry")
-		verify.check(gift_dialog.dialog_text.contains("U"), "the starter gift dialog must name the granted character")
-		verify.check(gift_dialog.dialog_text == "新获得角色：U", "the starter gift dialog must use the gift text")
-		if gift_dialog.visible:
-			gift_dialog.hide()
+	verify.check(not ArchiveState.has_claimed_starter_character(), "the main menu must not grant the starter character")
+	verify.check(menu.get_node_or_null("StarterGiftDialog") == null, "the main menu must not show the starter gift dialog")
 	menu.queue_free()
 	await process_frame
 
-	var relaunched_menu: Node = load(MAIN_MENU_SCENE_PATH).instantiate()
-	root.add_child(relaunched_menu)
-	await process_frame
+	# Opening another stage first must leave the gift untouched.
+	ArchiveState.reset_progress()
+	ArchiveState.set_target_stage_path(SECOND_STAGE_SCENE_PATH)
+	var other_stage_formation: Node = await _open_formation()
+	verify.check(not ArchiveState.has_claimed_starter_character(), "entering another stage must not grant the starter character")
+	verify.check(not _has_visible_gift_dialog(other_stage_formation), "the starter gift dialog must not open for another stage")
+	other_stage_formation.queue_free()
 	await process_frame
 
-	var repeated_dialog := relaunched_menu.get_node_or_null("StarterGiftDialog") as ConfirmationDialog
-	verify.check(repeated_dialog == null or not repeated_dialog.visible, "the starter gift dialog must not open twice for the same save")
-	relaunched_menu.queue_free()
+	# Entering 1-1 grants the starter character once.
+	ArchiveState.reset_progress()
+	ArchiveState.set_target_stage_path(OPENING_STAGE_SCENE_PATH)
+	var formation: Node = await _open_formation()
+	var gift_dialog := formation.get_node_or_null("StarterGiftDialog") as ConfirmationDialog
+	if verify.check(gift_dialog != null, "the 1-1 formation screen must create the starter gift dialog"):
+		verify.check(gift_dialog.visible, "the starter gift dialog must open on the first entry to 1-1")
+		verify.check(gift_dialog.dialog_text == "新获得角色：U", "the starter gift dialog must name the granted character")
+		if gift_dialog.visible:
+			gift_dialog.hide()
+	verify.check(ArchiveState.has_claimed_starter_character(), "entering 1-1 must record the starter gift")
+	verify.check(ArchiveState.is_character_unlocked("u"), "the starter character must stay unlocked after the gift")
+	formation.queue_free()
 	await process_frame
+
+	var second_visit: Node = await _open_formation()
+	verify.check(not _has_visible_gift_dialog(second_visit), "the starter gift dialog must not open twice for the same save")
+	second_visit.queue_free()
+	await process_frame
+
+
+func _open_formation() -> Node:
+	var formation: Node = load(FORMATION_SCENE_PATH).instantiate()
+	root.add_child(formation)
+	await process_frame
+	await process_frame
+	return formation
+
+
+func _has_visible_gift_dialog(formation: Node) -> bool:
+	var dialog := formation.get_node_or_null("StarterGiftDialog") as ConfirmationDialog
+	return dialog != null and dialog.visible
 
 
 func _check_stage_unlocks() -> void:
