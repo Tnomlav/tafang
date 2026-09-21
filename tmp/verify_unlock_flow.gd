@@ -9,6 +9,8 @@ const StageCatalog := preload("res://scripts/systems/stage_catalog.gd")
 
 const TITLE := "unlock flow"
 const SAVE_PATH := "user://archive_unlocks.cfg"
+const ARCHIVE_STATE_PATH := "res://scripts/systems/archive_state.gd"
+const MAIN_MENU_SCENE_PATH := "res://scenes/screens/main_menu.tscn"
 const SKILL_UNLOCK_STAGE := 18
 const CHAPTER2_BOSS_STAGE := 18
 const VISIBLE_STAGE_LOOKAHEAD := 6
@@ -21,12 +23,18 @@ var had_save := false
 func _initialize() -> void:
 	verify = VerifyScript.new()
 	_backup_save()
+	_run()
+
+
+func _run() -> void:
 	_check_fresh_save()
+	_check_starter_gift()
 	_check_stage_unlocks()
 	_check_character_unlocks()
 	_check_skill_unlocks()
 	_check_enemy_unlocks()
 	_check_level_select_visibility()
+	await _check_main_menu_gift()
 	_restore_save()
 	quit(verify.report(TITLE))
 
@@ -60,6 +68,55 @@ func _check_fresh_save() -> void:
 	verify.check(not ArchiveState.is_stage_cleared(1), "stage 1 must not be cleared on a fresh save")
 	verify.check(not ArchiveState.is_stage_unlocked(0), "stage 0 must never be unlocked")
 	verify.check_eq(ArchiveState.get_save_version(), 1, "fresh saves must use the current save version")
+
+
+func _check_starter_gift() -> void:
+	var constants: Dictionary = (load(ARCHIVE_STATE_PATH) as GDScript).get_script_constant_map()
+	var starter_character_id := str(constants.get("STARTER_CHARACTER_ID", ""))
+	verify.check_eq(starter_character_id, "u", "the starter character must stay u")
+	verify.check(not starter_character_id.is_empty(), "the starter character must stay configured")
+
+	ArchiveState.reset_progress()
+	verify.check(not ArchiveState.has_claimed_starter_character(), "a fresh save must not have claimed the starter character")
+	verify.check(ArchiveState.is_character_unlocked(starter_character_id), "the starter character must be usable on a fresh save")
+	verify.check_eq(ArchiveState.claim_starter_character(), starter_character_id, "entering the game must grant the starter character")
+	verify.check(ArchiveState.has_claimed_starter_character(), "the starter gift must be recorded in the save")
+	verify.check(ArchiveState.is_character_unlocked(starter_character_id), "the starter character must stay unlocked after the gift")
+	verify.check_eq(ArchiveState.claim_starter_character(), "", "the starter gift must only be granted once per save")
+
+	ArchiveState.reset_progress()
+	verify.check_eq(ArchiveState.claim_starter_character(), starter_character_id, "resetting progress must prepare the starter gift again")
+
+
+func _check_main_menu_gift() -> void:
+	if not verify.check_resource_path(MAIN_MENU_SCENE_PATH, "main menu scene"):
+		return
+
+	ArchiveState.reset_progress()
+	var menu: Node = load(MAIN_MENU_SCENE_PATH).instantiate()
+	root.add_child(menu)
+	await process_frame
+	await process_frame
+
+	var gift_dialog := menu.get_node_or_null("StarterGiftDialog") as ConfirmationDialog
+	if verify.check(gift_dialog != null, "the main menu must create the starter gift dialog"):
+		verify.check(gift_dialog.visible, "the starter gift dialog must open on the first entry")
+		verify.check(gift_dialog.dialog_text.contains("U"), "the starter gift dialog must name the granted character")
+		verify.check(gift_dialog.dialog_text == "新获得角色：U", "the starter gift dialog must use the gift text")
+		if gift_dialog.visible:
+			gift_dialog.hide()
+	menu.queue_free()
+	await process_frame
+
+	var relaunched_menu: Node = load(MAIN_MENU_SCENE_PATH).instantiate()
+	root.add_child(relaunched_menu)
+	await process_frame
+	await process_frame
+
+	var repeated_dialog := relaunched_menu.get_node_or_null("StarterGiftDialog") as ConfirmationDialog
+	verify.check(repeated_dialog == null or not repeated_dialog.visible, "the starter gift dialog must not open twice for the same save")
+	relaunched_menu.queue_free()
+	await process_frame
 
 
 func _check_stage_unlocks() -> void:

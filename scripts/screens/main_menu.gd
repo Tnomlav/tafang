@@ -6,6 +6,12 @@ const FORMATION_SCENE := "res://scenes/screens/formation.tscn"
 const ARCHIVE_STATE := preload("res://scripts/systems/archive_state.gd")
 const STAGE_CATALOG := preload("res://scripts/systems/stage_catalog.gd")
 const RESET_CONFIRM_SIZE := Vector2i(560, 300)
+const GIFT_DIALOG_SIZE := Vector2i(420, 540)
+const GIFT_PORTRAIT_SIZE := Vector2i(240, 240)
+const GIFT_PORTRAIT_TOP_OFFSET := 32.0
+const GIFT_PORTRAIT_UNIT_POSITION := Vector2(120, 168)
+const GIFT_PORTRAIT_UNIT_SCALE := Vector2(7, 7)
+const GIFT_CHARACTER_SCENE_TEMPLATE := "res://scenes/units/characters/%s.tscn"
 const DIALOG_BUTTON_MIN_SIZE := Vector2(140, 48)
 const DIALOG_PANEL_COLOR := Color(0.065, 0.072, 0.085, 0.96)
 const DIALOG_PANEL_BORDER_COLOR := Color(0.82, 0.69, 0.38, 1.0)
@@ -26,6 +32,8 @@ const UI_TEXT := {
 	"reset_ok": "重置",
 	"reset_body": "重置后会清空已解锁角色、敌人图鉴和编队。确定继续吗？",
 	"cancel": "取消",
+	"gift_ok": "确认",
+	"gift_body": "新获得角色：%s",
 }
 
 @onready var start_button: Button = $Center/MenuPanel/Margin/Stack/StartButton
@@ -36,10 +44,16 @@ const UI_TEXT := {
 @onready var quit_button: Button = $Center/MenuPanel/Margin/Stack/QuitButton
 @onready var reset_confirm_dialog: ConfirmationDialog = $ResetFirstConfirmDialog
 
+var gift_dialog: ConfirmationDialog = null
+var gift_content: Control = null
+var gift_portrait_container: SubViewportContainer = null
+var gift_portrait_root: Node2D = null
+
 
 func _ready() -> void:
 	ARCHIVE_STATE.ensure_initialized()
 	_ensure_continue_button()
+	_ensure_gift_dialog()
 	_localize_menu_text()
 	_configure_dialogs()
 	start_button.grab_focus()
@@ -49,6 +63,7 @@ func _ready() -> void:
 	_connect_once(reset_progress_button.pressed, _on_reset_progress_pressed)
 	_connect_once(quit_button.pressed, _on_quit_pressed)
 	_connect_once(reset_confirm_dialog.confirmed, _on_reset_confirmed)
+	call_deferred("_show_starter_gift")
 
 
 func _ensure_continue_button() -> void:
@@ -60,6 +75,139 @@ func _ensure_continue_button() -> void:
 	continue_button.text = UI_TEXT["continue"]
 	menu_stack.add_child(continue_button)
 	menu_stack.move_child(continue_button, start_button.get_index() + 1)
+
+
+func _ensure_gift_dialog() -> void:
+	if gift_dialog != null:
+		return
+
+	# AcceptDialog stretches its direct Control children to the whole dialog, so
+	# the portrait lives inside an extra container that keeps its own anchors.
+	gift_content = Control.new()
+	gift_content.name = "StarterGiftContent"
+	gift_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	gift_portrait_container = SubViewportContainer.new()
+	gift_portrait_container.name = "StarterGiftPortraitContainer"
+	gift_portrait_container.stretch = false
+	gift_portrait_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gift_portrait_container.custom_minimum_size = Vector2(GIFT_PORTRAIT_SIZE)
+	gift_portrait_container.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	gift_portrait_container.offset_left = -GIFT_PORTRAIT_SIZE.x * 0.5
+	gift_portrait_container.offset_right = GIFT_PORTRAIT_SIZE.x * 0.5
+	gift_portrait_container.offset_top = GIFT_PORTRAIT_TOP_OFFSET
+	gift_portrait_container.offset_bottom = GIFT_PORTRAIT_TOP_OFFSET + GIFT_PORTRAIT_SIZE.y
+
+	var portrait_viewport := SubViewport.new()
+	portrait_viewport.name = "StarterGiftPortraitViewport"
+	portrait_viewport.disable_3d = true
+	portrait_viewport.transparent_bg = true
+	portrait_viewport.size = GIFT_PORTRAIT_SIZE
+	portrait_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	gift_portrait_container.add_child(portrait_viewport)
+
+	gift_portrait_root = Node2D.new()
+	gift_portrait_root.name = "StarterGiftPortraitRoot"
+	portrait_viewport.add_child(gift_portrait_root)
+	gift_content.add_child(gift_portrait_container)
+
+	gift_dialog = ConfirmationDialog.new()
+	gift_dialog.name = "StarterGiftDialog"
+	gift_dialog.title = ""
+	gift_dialog.min_size = GIFT_DIALOG_SIZE
+	gift_dialog.add_child(gift_content)
+	add_child(gift_dialog)
+
+
+## Grants the starter character when the player enters the game for the first
+## time and announces it before the player starts a stage.
+func _show_starter_gift() -> void:
+	if gift_dialog == null:
+		return
+
+	var granted_character_id := ARCHIVE_STATE.claim_starter_character()
+	if granted_character_id.strip_edges().is_empty():
+		return
+
+	_configure_gift_dialog()
+	_update_gift_portrait(granted_character_id)
+	gift_dialog.dialog_text = UI_TEXT["gift_body"] % granted_character_id.to_upper()
+	gift_dialog.popup_centered(GIFT_DIALOG_SIZE)
+
+
+func _configure_gift_dialog() -> void:
+	gift_dialog.title = ""
+	gift_dialog.ok_button_text = UI_TEXT["gift_ok"]
+	gift_dialog.add_theme_stylebox_override("embedded_border", _make_dialog_panel_style())
+	gift_dialog.add_theme_stylebox_override("embedded_unfocused_border", _make_dialog_panel_style())
+	gift_dialog.add_theme_font_size_override("title_font_size", 1)
+	gift_dialog.add_theme_color_override("title_color", DIALOG_TITLE_COLOR)
+
+	var label := gift_dialog.get_label()
+	if label != null:
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.add_theme_color_override("font_color", DIALOG_TITLE_COLOR)
+		label.add_theme_font_size_override("font_size", 34)
+
+	var cancel_button := gift_dialog.get_cancel_button()
+	if cancel_button != null:
+		cancel_button.visible = false
+
+	_configure_dialog_button(gift_dialog.get_ok_button(), true)
+
+
+func _update_gift_portrait(character_id: String) -> void:
+	if gift_portrait_root == null:
+		return
+
+	for child in gift_portrait_root.get_children():
+		gift_portrait_root.remove_child(child)
+		child.queue_free()
+
+	var scene_path := GIFT_CHARACTER_SCENE_TEMPLATE % character_id.to_lower()
+	var character_scene := load(scene_path) as PackedScene
+	if character_scene == null:
+		return
+
+	var unit := character_scene.instantiate()
+	gift_portrait_root.add_child(unit)
+	if unit is Node2D:
+		unit.position = GIFT_PORTRAIT_UNIT_POSITION
+		unit.scale = GIFT_PORTRAIT_UNIT_SCALE
+		_hide_portrait_helpers(unit)
+		_play_portrait_idle_animation(unit)
+
+
+func _hide_portrait_helpers(node: Node) -> void:
+	for child in node.get_children():
+		if child is CollisionShape2D:
+			child.visible = false
+		if child.name == "HealthBar":
+			child.visible = false
+		_hide_portrait_helpers(child)
+
+
+func _play_portrait_idle_animation(node: Node) -> void:
+	var animated_sprite := node.get_node_or_null("BodySprite") as AnimatedSprite2D
+	if animated_sprite == null:
+		animated_sprite = node.get_node_or_null("Sprite") as AnimatedSprite2D
+	if animated_sprite == null or animated_sprite.sprite_frames == null:
+		return
+
+	var animation_name := StringName("normal_left")
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		animation_name = StringName("armed_left")
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		animation_name = animated_sprite.animation
+
+	animated_sprite.visible = true
+	animated_sprite.play(animation_name)
+
+	var armed_sprite := node.get_node_or_null("ArmedSprite") as AnimatedSprite2D
+	if armed_sprite != null:
+		armed_sprite.visible = bool(node.get("has_floating_cannon"))
 
 
 func _localize_menu_text() -> void:
@@ -127,6 +275,7 @@ func _on_reset_confirmed() -> void:
 	ARCHIVE_STATE.reset_progress()
 	reset_confirm_dialog.hide()
 	start_button.grab_focus()
+	_show_starter_gift()
 
 
 func _on_quit_pressed() -> void:

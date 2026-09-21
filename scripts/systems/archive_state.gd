@@ -14,6 +14,8 @@ const LAST_ENTERED_STAGE_KEY := "last_entered_stage"
 const HIGHEST_UNLOCKED_STAGE_KEY := "highest_unlocked_stage"
 const CURRENT_SAVE_VERSION := 1
 const DEFAULT_CHARACTER_ID := "u"
+const STARTER_CHARACTER_ID := DEFAULT_CHARACTER_ID
+const STARTER_GIFT_KEY := "starter_gift"
 const DEFAULT_UNLOCKED_STAGE := 1
 const SKILL_SYSTEM_UNLOCK_STAGE := 18 # Chapter 2 stage 6.
 const CHARACTER_SKILL_UNLOCK_STAGES := {
@@ -47,6 +49,31 @@ static func unlock_enemy(enemy_id: String) -> void:
 
 static func unlock_character(character_id: String) -> void:
 	_unlock_id(CHARACTER_SECTION, character_id)
+
+
+## Grants the starter character the first time the player enters the game and
+## reports it so the caller can announce the gift. Returns "" when the starter
+## character was already granted for this save.
+static func claim_starter_character() -> String:
+	var config := ConfigFile.new()
+	var error := config.load(SAVE_PATH)
+	if error == OK and bool(config.get_value(META_SECTION, STARTER_GIFT_KEY, false)):
+		return ""
+
+	_prepare_config_for_save(config)
+	config.set_value(META_SECTION, STARTER_GIFT_KEY, true)
+	config.set_value(CHARACTER_SECTION, STARTER_CHARACTER_ID, true)
+	config.save(SAVE_PATH)
+	return STARTER_CHARACTER_ID
+
+
+static func has_claimed_starter_character() -> bool:
+	var config := ConfigFile.new()
+	var error := config.load(SAVE_PATH)
+	if error != OK:
+		return false
+
+	return bool(config.get_value(META_SECTION, STARTER_GIFT_KEY, false))
 
 
 static func get_character_variant(base_id: String) -> String:
