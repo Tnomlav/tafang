@@ -5,6 +5,7 @@ extends SceneTree
 
 const VerifyScript := preload("res://tmp/verify_common.gd")
 const StageCatalog := preload("res://scripts/systems/stage_catalog.gd")
+const SceneDirectory := preload("res://scripts/systems/scene_directory.gd")
 
 const TITLE := "archive entries"
 const ARCHIVE_SCENE_PATH := "res://scenes/screens/archive.tscn"
@@ -26,8 +27,27 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	_check_scene_directory_helper()
 	await _check_archive_screen()
 	quit(verify.report(TITLE))
+
+
+func _check_scene_directory_helper() -> void:
+	# Exported builds list converted resources with a ".remap" suffix, so the
+	# directory scan has to normalize both shapes.
+	verify.check_eq(SceneDirectory.normalize_scene_file_name("u.tscn"), "u.tscn", "plain scene file names must stay unchanged")
+	verify.check_eq(SceneDirectory.normalize_scene_file_name("u.tscn.remap"), "u.tscn", "exported .remap scene file names must be normalized")
+	verify.check_eq(SceneDirectory.normalize_scene_file_name("enemy_1a.tscn.remap"), "enemy_1a.tscn", "enemy .remap file names must be normalized")
+	verify.check_eq(SceneDirectory.normalize_scene_file_name("u.png"), "", "non scene files must be ignored")
+	verify.check_eq(SceneDirectory.normalize_scene_file_name(""), "", "empty file names must be ignored")
+
+	var character_files := SceneDirectory.list_scene_file_names(CHARACTER_SCENE_DIR)
+	verify.check(character_files.has("u.tscn"), "the character scene listing must contain u.tscn")
+	verify.check(not character_files.has("u.tscn.remap"), "the character scene listing must drop the .remap suffix")
+	verify.check(not character_files.is_empty(), "the character scene listing must not be empty")
+
+	var enemy_files := SceneDirectory.list_scene_file_names(ENEMY_SCENE_DIR)
+	verify.check(enemy_files.has("enemy_1a.tscn"), "the enemy scene listing must contain enemy_1a.tscn")
 
 
 func _check_catalog_entries() -> void:

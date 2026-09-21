@@ -3,6 +3,7 @@ extends Control
 const LEVEL_SELECT_SCENE := "res://scenes/screens/level_select.tscn"
 const ARCHIVE_STATE := preload("res://scripts/systems/archive_state.gd")
 const STAGE_CATALOG := preload("res://scripts/systems/stage_catalog.gd")
+const SCENE_DIRECTORY := preload("res://scripts/systems/scene_directory.gd")
 const STARTER_GIFT_DIALOG_SCRIPT := preload("res://scripts/ui/starter_gift_dialog.gd")
 const MAX_SQUAD_SIZE := 10
 const STARTER_GIFT_STAGE_NUMBER := 1
@@ -156,25 +157,15 @@ func _ensure_gift_dialog() -> void:
 
 func _get_character_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
-	var directory := DirAccess.open(CHARACTER_SCENE_DIR)
-	if directory == null:
-		return entries
-
-	directory.list_dir_begin()
-	var file_name := directory.get_next()
-	while not file_name.is_empty():
-		if not directory.current_is_dir() and file_name.ends_with(".tscn"):
-			var character_id := file_name.get_basename().to_lower()
-			if RegEx.create_from_string("^[a-z]+[0-9]+$").search(character_id) != null:
-				file_name = directory.get_next()
-				continue
-			var variant_id := ARCHIVE_STATE.get_character_variant(character_id)
-			entries.append({
-				"id": character_id,
-				"scene": "%s/%s.tscn" % [CHARACTER_SCENE_DIR, variant_id],
-			})
-		file_name = directory.get_next()
-	directory.list_dir_end()
+	for scene_file_name in SCENE_DIRECTORY.list_scene_file_names(CHARACTER_SCENE_DIR):
+		var character_id := str(scene_file_name).get_basename().to_lower()
+		if RegEx.create_from_string("^[a-z]+[0-9]+$").search(character_id) != null:
+			continue
+		var variant_id := ARCHIVE_STATE.get_character_variant(character_id)
+		entries.append({
+			"id": character_id,
+			"scene": "%s/%s.tscn" % [CHARACTER_SCENE_DIR, variant_id],
+		})
 	entries.sort_custom(_is_character_entry_before)
 	return entries
 

@@ -2,6 +2,7 @@ extends Control
 
 const MAIN_MENU_SCENE := "res://scenes/screens/main_menu.tscn"
 const ARCHIVE_STATE := preload("res://scripts/systems/archive_state.gd")
+const SCENE_DIRECTORY := preload("res://scripts/systems/scene_directory.gd")
 
 const TYPE_CHARACTER := 0
 const TYPE_ENEMY := 1
@@ -268,23 +269,16 @@ func _get_enemy_entries() -> Array[Dictionary]:
 
 func _get_scene_entries(directory_path: String, file_prefix: String) -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
-	var directory := DirAccess.open(directory_path)
-	if directory == null:
-		return entries
-
-	directory.list_dir_begin()
-	var file_name := directory.get_next()
-	while not file_name.is_empty():
-		if not directory.current_is_dir() and file_name.ends_with(".tscn") and (file_prefix.is_empty() or file_name.begins_with(file_prefix)):
-			var entry_id := file_name.get_basename()
-			if not file_prefix.is_empty():
-				entry_id = entry_id.trim_prefix(file_prefix)
-			entries.append({
-				"id": entry_id.to_lower(),
-				"scene": "%s/%s" % [directory_path, file_name],
-			})
-		file_name = directory.get_next()
-	directory.list_dir_end()
+	for scene_file_name in SCENE_DIRECTORY.list_scene_file_names(directory_path):
+		if not file_prefix.is_empty() and not scene_file_name.begins_with(file_prefix):
+			continue
+		var entry_id := str(scene_file_name).get_basename()
+		if not file_prefix.is_empty():
+			entry_id = entry_id.trim_prefix(file_prefix)
+		entries.append({
+			"id": entry_id.to_lower(),
+			"scene": "%s/%s" % [directory_path, scene_file_name],
+		})
 	return entries
 
 
