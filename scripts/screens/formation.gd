@@ -119,9 +119,25 @@ func _show_starter_gift_for_opening_stage() -> void:
 
 	_build_character_buttons()
 	selected_ids = _filter_selectable_ids(selected_ids)
+	# The new character has to end up in the squad, otherwise the battle hand
+	# would not offer it.
+	_add_to_squad(granted_character_id)
 	_update_selection_ui()
+	ARCHIVE_STATE.set_selected_squad(selected_ids)
 	_ensure_gift_dialog()
 	gift_dialog.show_gift(granted_character_id)
+
+
+func _add_to_squad(character_id: String) -> void:
+	var normalized_id := character_id.strip_edges().to_lower()
+	if normalized_id.is_empty():
+		return
+	if selected_ids.has(normalized_id):
+		return
+	if selected_ids.size() >= MAX_SQUAD_SIZE:
+		return
+
+	selected_ids.append(normalized_id)
 
 
 func _get_target_stage_number() -> int:

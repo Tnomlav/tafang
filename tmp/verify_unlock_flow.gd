@@ -139,6 +139,20 @@ func _check_starter_gift_ui() -> void:
 	second_visit.queue_free()
 	await process_frame
 
+	# The granted character must end up in the squad, even when the saved squad
+	# was empty, so the battle hand can offer it.
+	ArchiveState.reset_progress()
+	ArchiveState.set_selected_squad([])
+	ArchiveState.set_target_stage_path(OPENING_STAGE_SCENE_PATH)
+	var empty_squad_formation: Node = await _open_formation()
+	var squad_after_gift := ArchiveState.get_selected_squad()
+	verify.check_eq(squad_after_gift.size(), 1, "the starter gift must fill an empty squad")
+	if squad_after_gift.size() == 1:
+		verify.check_eq(squad_after_gift[0], "u", "the starter gift must add the granted character to the squad")
+	verify.check(_has_visible_gift_dialog(empty_squad_formation), "the starter gift dialog must open when the squad was empty")
+	empty_squad_formation.queue_free()
+	await process_frame
+
 
 func _open_formation() -> Node:
 	var formation: Node = load(FORMATION_SCENE_PATH).instantiate()
