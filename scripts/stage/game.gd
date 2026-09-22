@@ -1234,6 +1234,12 @@ func _show_stage_feedback(message: String, color := Color(0.96, 0.93, 0.76, 1.0)
 
 
 func _load_png_texture(path: String) -> Texture2D:
+	# Prefer the imported resource: it is always available in exported builds,
+	# while the raw PNG bytes are only reachable when the source file is packed.
+	var imported_texture := load(path)
+	if imported_texture is Texture2D:
+		return imported_texture
+
 	var data := FileAccess.get_file_as_bytes(path)
 	if data.is_empty():
 		return null
