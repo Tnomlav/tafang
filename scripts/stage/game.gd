@@ -54,6 +54,8 @@ const SPLASH_PROJECTILE_HIT_HOLD_FRAMES := 3
 const ENEMY_MARKER_POINT_OFFSET := Vector2i.ZERO
 const DEFAULT_PROJECTILE_TEXTURE := preload("res://assets/textures/ui/道具ui.png")
 const DEFAULT_RESUME_ICON_PATH := "res://assets/textures/ui/tools/resume.png"
+const PAUSE_BUTTON_TEXT := "暂停"
+const RESUME_BUTTON_TEXT := "继续"
 const CONFIRM_DIALOG_SIZE := Vector2i(560, 300)
 const STAGE_CLEAR_DIALOG_SIZE := Vector2i(660, 480)
 const DIALOG_BUTTON_MIN_SIZE := Vector2(140, 48)
@@ -1185,7 +1187,7 @@ func _reset_stage_pause_state() -> void:
 	get_tree().paused = false
 	if pause_button != null:
 		pause_button.button_pressed = false
-		pause_button.text = "暂停"
+		pause_button.text = PAUSE_BUTTON_TEXT
 		pause_button.icon = pause_icon_texture
 
 
@@ -1193,7 +1195,7 @@ func _sync_stage_pause() -> void:
 	var is_paused := manual_pause_active or interaction_pause_active or is_stage_failed or is_stage_cleared
 	get_tree().paused = is_paused
 	pause_button.button_pressed = is_paused
-	pause_button.text = "暂停"
+	pause_button.text = RESUME_BUTTON_TEXT if is_paused else PAUSE_BUTTON_TEXT
 	pause_button.icon = resume_icon_texture if is_paused and resume_icon_texture != null else pause_icon_texture
 
 

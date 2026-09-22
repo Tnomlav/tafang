@@ -9,6 +9,7 @@ const StageCatalog := preload("res://scripts/systems/stage_catalog.gd")
 const TITLE := "stage scenes"
 const REQUIRED_NODES := ["Camera2D", "Ground_TML", "Overlay_TML", "Units", "DeployPreview", "UI"]
 const GAME_SCRIPT_PATH := "res://scripts/stage/game.gd"
+const OPENING_STAGE_NUMBER := 1
 
 var verify: RefCounted
 
@@ -81,6 +82,9 @@ func _check_instance(entry: Dictionary, instance: Node) -> bool:
 		verify.check(wave_data == null, "%s is development content and must not resolve wave data" % label)
 		return has_game_script
 
+	if int(entry.get("global_stage_number", 0)) == OPENING_STAGE_NUMBER:
+		_check_pause_button(instance)
+
 	verify.check(spawn_count > 0, "%s must define at least one enemy spawn marker" % label)
 	verify.check(target_count > 0, "%s must define at least one enemy target marker" % label)
 
@@ -103,3 +107,25 @@ func _check_instance(entry: Dictionary, instance: Node) -> bool:
 				verify.check(teleport_pair.y >= 1 and teleport_pair.y <= teleport_count, "%s teleport pair index %d must be within the %d teleport markers on the map" % [label, teleport_pair.y, teleport_count])
 
 	return has_game_script
+
+
+func _check_pause_button(instance: Node) -> void:
+	var pause_button := instance.get_node_or_null("UI/ToolBar/PauseButton") as Button
+	if not verify.check(pause_button != null, "the stage HUD must contain the pause button"):
+		return
+
+	var pause_icon = instance.get("pause_icon_texture")
+	var resume_icon = instance.get("resume_icon_texture")
+	verify.check(resume_icon != null, "the stage must resolve the resume icon")
+	verify.check_eq(pause_button.text, "暂停", "the pause button must start labelled 暂停")
+	verify.check_eq(pause_button.icon, pause_icon, "the pause button must start with the pause icon")
+
+	instance.call("_on_pause_button_pressed")
+	verify.check(instance.get_tree().paused, "pressing pause must pause the stage")
+	verify.check_eq(pause_button.text, "继续", "the pause button must switch to 继续 while paused")
+	verify.check_eq(pause_button.icon, resume_icon, "the pause button must switch to the resume icon while paused")
+
+	instance.call("_on_pause_button_pressed")
+	verify.check(not instance.get_tree().paused, "pressing pause again must resume the stage")
+	verify.check_eq(pause_button.text, "暂停", "the pause button must switch back to 暂停")
+	verify.check_eq(pause_button.icon, pause_icon, "the pause button must switch back to the pause icon")

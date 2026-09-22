@@ -1,6 +1,8 @@
 extends Node
 
-const SAVE_PATH := "user://archive_unlocks.cfg"
+## Overridable so the headless verification scripts can run their checks against
+## a scratch profile instead of the player's save file.
+static var SAVE_PATH := "user://archive_unlocks.cfg"
 const META_SECTION := "meta"
 const ENEMY_SECTION := "enemies"
 const CHARACTER_SECTION := "characters"

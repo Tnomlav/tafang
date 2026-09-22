@@ -8,7 +8,8 @@ const ArchiveState := preload("res://scripts/systems/archive_state.gd")
 const StageCatalog := preload("res://scripts/systems/stage_catalog.gd")
 
 const TITLE := "unlock flow"
-const SAVE_PATH := "user://archive_unlocks.cfg"
+const DEFAULT_SAVE_PATH := "user://archive_unlocks.cfg"
+const VERIFY_SAVE_PATH := "user://verify_unlock_flow.cfg"
 const ARCHIVE_STATE_PATH := "res://scripts/systems/archive_state.gd"
 const MAIN_MENU_SCENE_PATH := "res://scenes/screens/main_menu.tscn"
 const FORMATION_SCENE_PATH := "res://scenes/screens/formation.tscn"
@@ -19,13 +20,14 @@ const CHAPTER2_BOSS_STAGE := 18
 const VISIBLE_STAGE_LOOKAHEAD := 6
 
 var verify: RefCounted
-var saved_data := PackedByteArray()
-var had_save := false
 
 
 func _initialize() -> void:
 	verify = VerifyScript.new()
-	_backup_save()
+	# Run against a scratch profile so a running game never conflicts with the
+	# checks and the player's own save file is left untouched.
+	ArchiveState.SAVE_PATH = VERIFY_SAVE_PATH
+	_remove_verify_profile()
 	_run()
 
 
@@ -38,29 +40,14 @@ func _run() -> void:
 	_check_enemy_unlocks()
 	_check_level_select_visibility()
 	await _check_starter_gift_ui()
-	_restore_save()
+	_remove_verify_profile()
+	ArchiveState.SAVE_PATH = DEFAULT_SAVE_PATH
 	quit(verify.report(TITLE))
 
 
-func _backup_save() -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if file == null:
-		return
-	saved_data = file.get_buffer(file.get_length())
-	file.close()
-	had_save = true
-
-
-func _restore_save() -> void:
-	if had_save:
-		var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-		if file != null:
-			file.store_buffer(saved_data)
-			file.close()
-		return
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
+func _remove_verify_profile() -> void:
+	if FileAccess.file_exists(VERIFY_SAVE_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(VERIFY_SAVE_PATH))
 
 
 func _check_fresh_save() -> void:
